@@ -1,0 +1,36 @@
+- name: ccp4-ed specific configuration on both master and worker nodes
+  tags:
+        - after
+        - ccp4
+  vars:
+          controller3: '130.246.214.21'
+
+
+  hosts: gridengine_master, gridengine_worker
+
+  tasks:
+          - name: Mount the job directory
+            mount:
+                    path: /ed
+                    src: '{{ controller3 }}:/ed'
+                    state: mounted
+                    fstype: nfs
+
+
+- name: configuration on the head node only
+  tags:
+        - after
+        - ccp4
+        - master
+  hosts: gridengine_master
+  become: true
+
+  tasks:
+          - name: link /ed directory to the tarik's home directory
+            file:
+                    src: /ed/
+                    dest: /home/tarik/ed
+                    owner: tarik
+                    group: ccp4
+                    mode: '0775'
+                    state: link
