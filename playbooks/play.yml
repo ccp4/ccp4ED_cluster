@@ -20,9 +20,9 @@
            - name: install dependencies
              apt:
                     name:
-                     - openmpi-devel
-                     - liblas-devel
-                     - lapack-devel
+                     - libopenmpi-dev
+                     - libblas-dev
+                     - liblapack-dev
                     state: latest
 
            - name: create ccp4 user group
