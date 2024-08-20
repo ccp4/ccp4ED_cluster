@@ -12,6 +12,10 @@
         - ccp4
   hosts: slurm_master, slurm_worker
 
+  vars:
+    local_user: 'lii26466_local'
+    remote_user: 'lii26466'
+
   tasks:
            - name: install dependencies
              apt:
@@ -28,10 +32,10 @@
                     gid: 13749
 
 
-           - name: add lii26466 to sudoers
+           - name: add user to sudoers
              lineinfile:
                     path: /etc/sudoers.d/cloud
-                    line: ' lii26466  ALL=(ALL)       NOPASSWD: ALL'
+                    line: ' {{ remote_user }}  ALL=(ALL)       NOPASSWD: ALL'
                     state: present
 
 ################################################################
@@ -50,27 +54,27 @@
   tasks:
            - name: copy the .bashrc file
              copy:
-                    src: /home/lii26466_local/.bashrc
-                    dest: /home/lii26466/.bashrc
-                    owner: lii2466
+                    src: '/home/{{ local_user }}/.bashrc'
+                    dest: '/home/{{ local_user}}/.bashrc'
+                    owner: '{{ remote_user }}'
                     group: ccp4
                     mode: '0644'
 
            - name: copy the .bash_aliases file
              copy:
-                    src: /home/lii26466_local/.bash_aliases
-                    dest: /home/lii26466/.bash_aliases
-                    owner: lii26466
+                    src: '/home/{{ local_user }}/.bash_aliases'
+                    dest: '/home/{{ remote_user }}/.bash_aliases'
+                    owner: '{{ remote_user }}'
                     group: ccp4
                     mode: '0644'
 
-           - name: copy the binaries
-             copy:
-                    src: /home/lii26466_local/bin/felix
-                    dest: /home/lii26466/bin/felix
-                    owner: lii26466
-                    group: ccp4
-                    mode: '0644'
+#           - name: copy the binaries
+#             copy:
+#                    src: /home/lii26466_local/bin/felix
+#                    dest: /home/lii26466/bin/felix
+#                    owner: lii26466
+#                    group: ccp4
+#                    mode: '0644'
 
 ################################################################
 ################################################################
