@@ -1,3 +1,4 @@
+
 ---
 # CCP4 specific configurations for the cluster based on SL7
 # to be run with this command:
@@ -6,6 +7,7 @@
 #   slurm_master
 #   slurm_worker
 
+
 - name: ccp4-ed specific configuration on both master and worker nodes
   tags:
         - after
@@ -13,8 +15,9 @@
   hosts: slurm_master, slurm_worker
 
   vars:
-    local_user: 'lii26466_local'
-    remote_user: 'lii26466'
+      - local_user: 'lii26466'
+      - remote_user: 'lii26466'
+
 
   tasks:
            - name: install dependencies
@@ -51,11 +54,15 @@
   hosts: slurm_master
   become: true
 
+  vars:
+      - local_user: 'lii26466'
+      - remote_user: 'lii26466'
+
   tasks:
            - name: copy the .bashrc file
              copy:
                     src: '/home/{{ local_user }}/.bashrc'
-                    dest: '/home/{{ local_user}}/.bashrc'
+                    dest: '/home/{{ remote_user }}/.bashrc'
                     owner: '{{ remote_user }}'
                     group: ccp4
                     mode: '0644'
@@ -93,6 +100,6 @@
     - name: latest version of all required packages installed
       yum:
         name:
-          - liblas-devel
-          - lapack-devel
+          - libblas-dev
+          - liblapack-dev
         state: latest
