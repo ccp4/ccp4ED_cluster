@@ -15,9 +15,7 @@
   hosts: slurm_master, slurm_worker
 
   vars:
-      - local_user: 'lii26466'
-      - remote_user: 'lii26466'
-
+      - user: 'lii26466'
 
   tasks:
            - name: install dependencies
@@ -38,8 +36,19 @@
            - name: add user to sudoers
              lineinfile:
                     path: /etc/sudoers.d/cloud
-                    line: ' {{ remote_user }}  ALL=(ALL)       NOPASSWD: ALL'
+                    line: ' {{ user }}  ALL=(ALL)       NOPASSWD: ALL'
                     state: present
+
+           - name: copy the script
+             copy:
+                     src: /home/{{ user }}/ccp4ED_cluster/scripts/fftw_installer.sh
+                     dest: /home/{{ user }}/fftw_installer.sh
+                     owner: '{{ user }}'
+                     group: ccp4
+                     mode: '0755'
+
+           - name: Execute the script
+             command: bash fftw_installer.sh
 
 ################################################################
 ################################################################
@@ -55,54 +64,40 @@
   become: true
 
   vars:
-      - local_user: 'lii26466'
-      - remote_user: 'lii26466'
+      - user: 'lii26466'
 
   tasks:
            - name: copy the .bashrc file
              copy:
-                    src: '/home/{{ local_user }}/.bashrc'
-                    dest: '/home/{{ remote_user }}/.bashrc'
-                    owner: '{{ remote_user }}'
+                    src: /home/{{ user }}/.bashrc
+                    dest: /home/{{ user }}/.bashrc
+                    owner: '{{ user }}'
                     group: ccp4
                     mode: '0644'
 
            - name: copy the .bash_aliases file
              copy:
-                    src: '/home/{{ local_user }}/.bash_aliases'
-                    dest: '/home/{{ remote_user }}/.bash_aliases'
-                    owner: '{{ remote_user }}'
+                    src: /home/{{ user }}/.bash_aliases
+                    dest: /home/{{ user }}/.bash_aliases
+                    owner: '{{ user }}'
                     group: ccp4
                     mode: '0644'
 
-            - name: copy the script
-              copy:
-                     src: /home/{{ local_user }}/Documents/git/ccp4/ccp4ED_clusters/scripts/felix_installer.sh
-                     dest: /home/{{ remote_user }}/felix_installer.sh
-                     owner: lii26466
+           - name: copy the script
+             copy:
+                     src: /home/{{ user }}/ccp4ED_cluster/scripts/felix_installer.sh
+                     dest: /home/{{ user }}/felix_installer.sh
+                     owner: '{{ user }}'
                      group: ccp4
                      mode: '0755'
 
            - name: Execute the script
              command: bash felix_installer.sh
 
-################################################################
-################################################################
-#### NODES
-################################################################
-################################################################
-- name: configuration on the compute node only
-  tags:
-    - after
-    - ccp4
-    - worker
-  hosts: slurm_worker
-
-
-  tasks:
-    - name: latest version of all required packages installed
-      yum:
-        name:
-          - libblas-dev
-          - liblapack-dev
-        state: latest
+           - name: copy the run_felix.sh script
+             copy:
+                   src: /home/{{ user }}/ccp4ED_cluster/scripts/run_felix.sh
+                   dest: /home/{{ user }}/run_felix.sh
+                   owner: '{{ user }}'
+                   group: ccp4
+                   mode: '0755'
