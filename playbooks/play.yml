@@ -13,7 +13,8 @@
         - after
         - ccp4
   hosts: slurm_master, slurm_worker
-
+  become: true
+  
   vars:
       - user: 'lii26466'
 
