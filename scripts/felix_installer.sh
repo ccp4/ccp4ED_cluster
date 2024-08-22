@@ -19,7 +19,7 @@ sudo make install
 
 ### compile native FELIX
 mkdir -p ~/Documents/git/ccp4/src/
-# export PATH=/usr/lib/openmpi/bin/
+export PATH=/usr/lib/openmpi/bin/
 cd ~/Documents/git/ccp4/src/
 git clone https://github.com/ronandrevon/Felix.git felix
 cd felix
@@ -27,8 +27,4 @@ git checkout v2.2.0
 cd src
 make
 
-## install link
-#sudo mkdir bin
-#sudo ln -s /home/$USER/Documents/git/ccp4/src/felix/src/felix.OPT64NGNU.d /home/$USER/bin/felix
-
-#IByteSize = 8 in .inp
+sudo ln -s /home/$USER/Documents/git/ccp4/src/felix/src/felix.OPT64NGNU.d /home/$USER/felix

@@ -75,13 +75,16 @@
                     group: ccp4
                     mode: '0644'
 
-#           - name: copy the binaries
-#             copy:
-#                    src: /home/lii26466_local/bin/felix
-#                    dest: /home/lii26466/bin/felix
-#                    owner: lii26466
-#                    group: ccp4
-#                    mode: '0644'
+            - name: copy the script
+              copy:
+                     src: /home/{{ local_user }}/Documents/git/ccp4/ccp4ED_clusters/scripts/felix_installer.sh
+                     dest: /home/{{ remote_user }}/felix_installer.sh
+                     owner: lii26466
+                     group: ccp4
+                     mode: '0755'
+
+           - name: Execute the script
+             command: bash felix_installer.sh
 
 ################################################################
 ################################################################
