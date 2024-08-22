@@ -39,16 +39,7 @@
                     line: ' {{ user }}  ALL=(ALL)       NOPASSWD: ALL'
                     state: present
 
-           - name: copy the script
-             copy:
-                     src: /home/{{ user }}/ccp4ED_cluster/scripts/fftw_installer.sh
-                     dest: /home/{{ user }}/fftw_installer.sh
-                     owner: '{{ user }}'
-                     group: ccp4
-                     mode: '0755'
 
-           - name: Execute the script
-             command: bash fftw_installer.sh
 
 ################################################################
 ################################################################
@@ -83,7 +74,7 @@
                     group: ccp4
                     mode: '0644'
 
-           - name: copy the script
+           - name: copy the felix_installer script
              copy:
                      src: /home/{{ user }}/ccp4ED_cluster/scripts/felix_installer.sh
                      dest: /home/{{ user }}/felix_installer.sh
@@ -91,8 +82,13 @@
                      group: ccp4
                      mode: '0755'
 
-           - name: Execute the script
-             command: bash felix_installer.sh
+           - name: copy the fftw_installer script
+             copy:
+                     src: /home/{{ user }}/ccp4ED_cluster/scripts/fftw_installer.sh
+                     dest: /home/{{ user }}/fftw_installer.sh
+                     owner: '{{ user }}'
+                     group: ccp4
+                     mode: '0755'
 
            - name: copy the run_felix.sh script
              copy:
@@ -101,3 +97,26 @@
                    owner: '{{ user }}'
                    group: ccp4
                    mode: '0755'
+
+           - name: Execute the fftw_installer script
+             command: bash fftw_installer.sh
+
+           - name: Execute the felix_installer script
+             command: bash felix_installer.sh
+
+
+################################################################
+################################################################
+#### MASTER ONLY
+################################################################
+################################################################
+- name: ccp4-ed specific configuration on worker nodes
+  tags:
+        - after
+        - ccp4
+  hosts: slurm_worker
+
+
+  tasks:
+           - name: Execute the fftw_installer script
+             command: bash fftw_installer.sh
